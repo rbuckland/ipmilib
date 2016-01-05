@@ -1,5 +1,5 @@
 /*
- * AuthenticationAlgorithm.java 
+ * AuthenticationAlgorithm.java
  * Created on 2011-07-21
  *
  * Copyright (c) Verax Systems 2011.
@@ -26,12 +26,12 @@ public abstract class AuthenticationAlgorithm {
 	 * @return algorithm-specific code
 	 */
 	public abstract byte getCode();
-	
+
 	/**
 	 * @return length of the key for the RAKP2 message
 	 */
 	public abstract int getKeyLength();
-	
+
 	/**
 	 * @return length of the integrity check base for RAKP4 message
 	 */
@@ -39,7 +39,7 @@ public abstract class AuthenticationAlgorithm {
 
 	/**
 	 * Checks value of the Key Exchange Authentication Code in RAKP messages
-	 * 
+	 *
 	 * @param data
 	 *            - The base for authentication algorithm. Depends on RAKP
 	 *            Message.
@@ -59,7 +59,7 @@ public abstract class AuthenticationAlgorithm {
 
 	/**
 	 * Calculates value of the Key Exchange Authentication Code in RAKP messages
-	 * 
+	 *
 	 * @param data
 	 *            - The base for authentication algorithm. Depends on RAKP
 	 *            Message.
@@ -76,7 +76,7 @@ public abstract class AuthenticationAlgorithm {
 
 	/**
 	 * Validates Integrity Check Value in RAKP Message 4.
-	 * 
+	 *
 	 * @param data
 	 *            - The base for authentication algorithm.
 	 * @param reference
@@ -93,4 +93,18 @@ public abstract class AuthenticationAlgorithm {
 	 */
 	public abstract boolean doIntegrityCheck(byte[] data, byte[] reference,
 			byte[] sik) throws InvalidKeyException, NoSuchAlgorithmException;
+
+
+  /**
+   * Returns a string version of the algorithm's ID
+   */
+  public String toString() {
+    switch (this.getCode()) {
+      case SecurityConstants.AA_RAKP_NONE:        return "AA_RAKP_NONE";
+      case SecurityConstants.AA_RAKP_HMAC_SHA1:   return "AA_RAKP_HMAC_SHA1";
+      case SecurityConstants.AA_RAKP_HMAC_MD5:    return "AA_RAKP_HMAC_MD5";
+      case SecurityConstants.AA_RAKP_HMAC_SHA256: return "AA_RAKP_HMAC_SHA256";
+      default: return "invalid(unknown)";
+    }
+  }
 }

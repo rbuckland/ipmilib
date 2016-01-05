@@ -1,5 +1,5 @@
 /*
- * CipherSuite.java 
+ * CipherSuite.java
  * Created on 2011-08-01
  *
  * Copyright (c) Verax Systems 2011.
@@ -52,7 +52,7 @@ public class CipherSuite {
 
 	/**
 	 * Initializes algorithms contained in this {@link CipherSuite}.
-	 * 
+	 *
 	 * @param sik
 	 *            - Session Integrity Key calculated during the opening of the
 	 *            session or user password if 'one-key' logins are enabled.
@@ -73,7 +73,7 @@ public class CipherSuite {
 
 	/**
 	 * Returns instance of AuthenticationAlgorithm class.
-	 * 
+	 *
 	 * @throws IllegalArgumentException
 	 *             when authentication algorithm code is incorrect.
 	 */
@@ -101,10 +101,10 @@ public class CipherSuite {
 			return aa;
 		case SecurityConstants.AA_RAKP_HMAC_MD5:
 			// TODO: RAKP HMAC MD5
-			throw new IllegalArgumentException("Not yet implemented.");
+			throw new IllegalArgumentException("AA_RAKP_HMAC_MD5 Not yet implemented.");
 		case SecurityConstants.AA_RAKP_HMAC_SHA256:
 			// TODO: RAKP HMAC Sha256
-			throw new IllegalArgumentException("Not yet implemented.");
+			throw new IllegalArgumentException("AA_RAKP_HMAC_SHA256 Not yet implemented.");
 		default:
 			throw new IllegalArgumentException(
 					"Invalid authentication algorithm.");
@@ -114,7 +114,7 @@ public class CipherSuite {
 
 	/**
 	 * Returns instance of IntegrityAlgorithm class.
-	 * 
+	 *
 	 * @throws IllegalArgumentException
 	 *             when integrity algorithm code is incorrect.
 	 * @throws NoSuchAlgorithmException
@@ -144,13 +144,13 @@ public class CipherSuite {
 			return ia;
 		case SecurityConstants.IA_HMAC_SHA256_128:
 			// TODO: HMAC SHA256-128
-			throw new IllegalArgumentException("Not yet implemented.");
+			throw new IllegalArgumentException("IA_HMAC_SHA256_128 Not yet implemented.");
 		case SecurityConstants.IA_MD5_128:
 			// TODO: MD5-128
-			throw new IllegalArgumentException("Not yet implemented.");
+			throw new IllegalArgumentException("IA_MD5_128 Not yet implemented.");
 		case SecurityConstants.IA_HMAC_MD5_128:
 			// TODO: HMAC MD5-128
-			throw new IllegalArgumentException("Not yet implemented.");
+			throw new IllegalArgumentException("IA_HMAC_MD5_128 Not yet implemented.");
 		default:
 			throw new IllegalArgumentException("Invalid integrity algorithm.");
 
@@ -159,7 +159,7 @@ public class CipherSuite {
 
 	/**
 	 * Returns instance of ConfidentialityAlgorithm class.
-	 * 
+	 *
 	 * @throws IllegalArgumentException
 	 *             when confidentiality algorithm code is incorrect.
 	 */
@@ -182,10 +182,10 @@ public class CipherSuite {
 			return ca;
 		case SecurityConstants.CA_XRC4_40:
 			// TODO: XRc4-40
-			throw new IllegalArgumentException("Not yet implemented.");
+			throw new IllegalArgumentException("CA_XRC4_40 Not yet implemented.");
 		case SecurityConstants.CA_XRC4_128:
 			// TODO: XRc4-128
-			throw new IllegalArgumentException("Not yet implemented.");
+			throw new IllegalArgumentException("CA_XRC4_128 Not yet implemented.");
 		default:
 			throw new IllegalArgumentException(
 					"Invalid confidentiality algorithm.");
@@ -199,7 +199,7 @@ public class CipherSuite {
 	 * {@link GetChannelCipherSuitesResponseData} since data comes in 16-byte
 	 * packets and is fragmented. Supports only one integrity and one
 	 * confidentiality algorithm per suite.
-	 * 
+	 *
 	 * @param bytes
 	 *            - concatenated Cipher Suite Records received by
 	 *            {@link GetChannelCipherSuites} commands.
@@ -247,4 +247,14 @@ public class CipherSuite {
 	public static CipherSuite getEmpty() {
 		return new CipherSuite((byte) 0, (byte) 0, (byte) 0, (byte) 0);
 	}
+
+  public String toString() {
+    return this.getId() + "(" + aa + "/" + ia + "/" + ca + ")";
+  }
+
+  public void initAllAlgorithms() {
+    getConfidentialityAlgorithm();
+    getIntegrityAlgorithm();
+    getAuthenticationAlgorithm();
+  }
 }

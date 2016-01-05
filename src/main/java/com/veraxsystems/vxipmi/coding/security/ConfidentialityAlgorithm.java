@@ -1,5 +1,5 @@
 /*
- * ConfidentialityAlgorithm.java 
+ * ConfidentialityAlgorithm.java
  * Created on 2011-07-25
  *
  * Copyright (c) Verax Systems 2011.
@@ -25,7 +25,7 @@ public abstract class ConfidentialityAlgorithm {
 
 	/**
 	 * Initializes Confidentiality Algorithm
-	 * 
+	 *
 	 * @param sik
 	 *            - Session Integrity Key calculated during the opening of the
 	 *            session or user password if 'one-key' logins are enabled.
@@ -48,7 +48,7 @@ public abstract class ConfidentialityAlgorithm {
 
 	/**
 	 * Encrypts the data.
-	 * 
+	 *
 	 * @param data
 	 *            - payload to be encrypted
 	 * @return encrypted data encapsulated in COnfidentiality Header and
@@ -60,12 +60,12 @@ public abstract class ConfidentialityAlgorithm {
 
 	/**
 	 * Decrypts the data.
-	 * 
+	 *
 	 * @param data
 	 *            - encrypted data encapsulated in COnfidentiality Header and
 	 *            Trailer.
 	 * @return decrypted data.
-	 * @throws IllegalArgumentException 
+	 * @throws IllegalArgumentException
 	 *             - when initiation of the algorithm fails
 	 */
 	public abstract byte[] decrypt(byte[] data) throws IllegalArgumentException;
@@ -73,9 +73,22 @@ public abstract class ConfidentialityAlgorithm {
 	/**
 	 * Calculates size of the confidentiality header and trailer specific for
 	 * the algorithm.
-	 * 
+	 *
 	 * @param payloadSize
 	 *            - size of the data that will be encrypted
 	 */
 	public abstract int getConfidentialityOverheadSize(int payloadSize);
+
+  /**
+   * Returns a string version of the algorithm's ID
+   */
+  public String toString() {
+    switch (this.getCode()) {
+      case SecurityConstants.CA_NONE:       return "CA_NONE";
+      case SecurityConstants.CA_AES_CBC128: return "CA_AES_CBC128";
+      case SecurityConstants.CA_XRC4_40:    return "CA_XRC4_40";
+      case SecurityConstants.CA_XRC4_128:   return "CA_XRC4_128";
+      default: return "invalid(unknown)";
+    }
+  }
 }

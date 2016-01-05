@@ -1,5 +1,5 @@
 /*
- * IntegrityAlgorithm.java 
+ * IntegrityAlgorithm.java
  * Created on 2011-07-21
  *
  * Copyright (c) Verax Systems 2011.
@@ -30,7 +30,7 @@ public abstract class IntegrityAlgorithm {
 
 	/**
 	 * Initializes Integrity Algorithm
-	 * 
+	 *
 	 * @param sik
 	 *            - Session Integrity Key calculated during the opening of the
 	 *            session or user password if 'one-key' logins are enabled.
@@ -48,14 +48,14 @@ public abstract class IntegrityAlgorithm {
 
 	/**
 	 * Creates AuthCode field for message.
-	 * 
+	 *
 	 * @param base
 	 *            - data starting with the AuthType/Format field up to and
 	 *            including the field that immediately precedes the AuthCode
 	 *            field
 	 * @return AuthCode field. Might be null if empty AuthCOde field is
 	 *         generated.
-	 * 
+	 *
 	 * @see Rakp1#calculateSik(com.veraxsystems.vxipmi.coding.commands.session.Rakp1ResponseData)
 	 */
 	public abstract byte[] generateAuthCode(byte[] base);
@@ -63,7 +63,7 @@ public abstract class IntegrityAlgorithm {
 	/**
 	 * Modifies the algorithm base since with null Auth Code during encoding
 	 * Integrity Pad isn't calculated.
-	 * 
+	 *
 	 * @param base
 	 *            - integrity algorithm base without Integrity Pad.
 	 * @param authCodeLength
@@ -95,4 +95,18 @@ public abstract class IntegrityAlgorithm {
 			return base;
 		}
 	}
+
+  /**
+   * Returns a string version of the algorithm's ID
+   */
+  public String toString() {
+    switch (this.getCode()) {
+      case SecurityConstants.IA_NONE:             return "IA_NONE";
+      case SecurityConstants.IA_HMAC_SHA1_96:     return "IA_HMAC_SHA1_96";
+      case SecurityConstants.IA_HMAC_SHA256_128:  return "IA_HMAC_SHA256_128";
+      case SecurityConstants.IA_MD5_128:          return "IA_MD5_128";
+      case SecurityConstants.IA_HMAC_MD5_128:     return "IA_HMAC_MD5_128";
+      default: return "invalid(unknown)";
+    }
+  }
 }

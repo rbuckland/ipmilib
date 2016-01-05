@@ -1,5 +1,10 @@
 *.class
 
+dependency-reduced-pom.xml
+
+logs/
+target/
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 

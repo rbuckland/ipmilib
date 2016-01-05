@@ -1,5 +1,5 @@
 /*
- * DecoderRunner.java 
+ * DecoderRunner.java
  * Created on 2011-07-21
  *
  * Copyright (c) Verax Systems 2011.
@@ -98,7 +98,7 @@ public class DecoderRunner extends Thread {
 	private static Rakp1ResponseData r1rd;
 	private static CipherSuite cs = new CipherSuite((byte) 0,
 			SecurityConstants.AA_RAKP_HMAC_SHA1, (byte) 0, (byte) 0);
-	
+
 	private static Logger logger = Logger.getLogger(DecoderRunner.class);
 
 	private static int cssrcv = 16;
@@ -110,36 +110,38 @@ public class DecoderRunner extends Thread {
 	private static byte[] cssrec;
 
 	private static List<ReadFruDataResponseData> rd;
-	
+
 	private static int fruId = 0;
-	
+
 	private static int fruSize = 528;
-	
+
 	public static void main(String[] args) throws IOException,
 			InterruptedException, NoSuchAlgorithmException,
 			InvalidKeyException, IllegalArgumentException {
 
 		logger.info(DateFormat.getInstance().format(
 				new Date(new Date().getTime())));
-		
+
+
+    String propertiesFileName = args[0];
 		//StateMachineTest stateMachineTest = new StateMachineTest();
-		
+
 		//stateMachineTest.testSessionUpkeep();
 
 		lock = true;
 
+    Properties properties = new Properties();
+		properties.load(new FileInputStream(propertiesFileName));
+
 		DecoderRunner dr = new DecoderRunner();
 
-		dr.socket = new DatagramSocket(6666);
+		dr.socket = new DatagramSocket(Integer.parseInt((String)properties.getProperty("ipmiPort","6666")));
 
 		dr.start();
 
-		Properties properties = new Properties();
-		properties.load(new FileInputStream("src/test/resources/test.properties"));
-		
 		Thread.sleep(100);
 
-		InetAddress ad = InetAddress.getByName((String)properties.get("testIp"));
+		InetAddress ad = InetAddress.getByName((String)properties.get("hostIp"));
 		// InetAddress ad = InetAddress.getByName("192.168.100.190");
 		// byte[] outmsg = RmcpEncoder.encode(new RmcpPingMessage((byte) 1));
 
@@ -170,10 +172,8 @@ public class DecoderRunner extends Thread {
 
 		for (CipherSuite c : csl) {
 			try {
-				logger.info(c.getId() + ": "
-						+ c.getAuthenticationAlgorithm().getCode() + " "
-						+ c.getIntegrityAlgorithm().getCode() + " "
-						+ c.getConfidentialityAlgorithm().getCode());
+        c.initAllAlgorithms();
+				logger.info(c);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}
@@ -211,7 +211,7 @@ public class DecoderRunner extends Thread {
 
 		lock = true;
 
-				
+
 		r1 = new Rakp1(managedSeqNum, PrivilegeLevel.User, (String)properties.get("username"), (String)properties.get("password"),
 				null, cs);
 
@@ -222,7 +222,7 @@ public class DecoderRunner extends Thread {
 		dr.socket.send(packet);
 
 		Thread.sleep(150);
-		
+
 		while (lock) {
 			Thread.sleep(1);
 		}
@@ -376,7 +376,7 @@ public class DecoderRunner extends Thread {
 		Thread.sleep(300);
 
 		logger.info(">>Sending GetFruInventoryAreaInfo");
-		
+
 		outmsg = Encoder.encode(new Protocolv20Encoder(),
 				new GetFruInventoryAreaInfo(IpmiVersion.V20, cs,
 						AuthenticationType.RMCPPlus, fruId), seq++, r1
@@ -385,14 +385,14 @@ public class DecoderRunner extends Thread {
 		packet = new DatagramPacket(outmsg, outmsg.length, ad, 0x26F);
 
 		dr.socket.send(packet);
-		
+
 		for(int i = 0; i < fruSize; i += 100) {
 
 
 			Thread.sleep(300);
 
 			logger.info(">>Sending ReadFruData");
-			
+
 			int cnt = 100;
 			if(i + cnt > fruSize) {
 				cnt = fruSize % 100;
@@ -1071,9 +1071,9 @@ public class DecoderRunner extends Thread {
 		logger.info("FRU Unit: " + data13.getFruUnit());
 
 		logger.info("---------------------------------------------");
-		
+
 		rd = new ArrayList<ReadFruDataResponseData>();
-		
+
 		for(int i = 0; i < fruSize; i +=100) {
 			resp = new DatagramPacket(new byte[256], 256);
 
@@ -1100,7 +1100,7 @@ public class DecoderRunner extends Thread {
 			} catch (InvalidKeyException e) {
 				logger.error(e.getMessage(), e);
 			}
-			
+
 			rd.add(data14);
 
 			logger.info(data14.getFruData().length);
@@ -1108,9 +1108,9 @@ public class DecoderRunner extends Thread {
 			logger.info("---------------------------------------------");
 
 		}
-			
+
 			List<FruRecord> records = ReadFruData.decodeFruData(rd);
-			
+
 			for(FruRecord r : records) {
 				if(r instanceof ChassisInfo) {
 					ChassisInfo chassisInfo = (ChassisInfo) r;
