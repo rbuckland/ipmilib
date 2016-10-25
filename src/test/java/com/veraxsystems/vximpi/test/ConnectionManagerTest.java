@@ -11,19 +11,6 @@
  */
 package com.veraxsystems.vximpi.test;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
-
-import org.apache.log4j.Logger;
-import org.junit.Test;
-import junit.framework.TestCase;
-
 import com.veraxsystems.vxipmi.coding.commands.IpmiVersion;
 import com.veraxsystems.vxipmi.coding.commands.PrivilegeLevel;
 import com.veraxsystems.vxipmi.coding.commands.ResponseData;
@@ -35,6 +22,18 @@ import com.veraxsystems.vxipmi.connection.ConnectionListener;
 import com.veraxsystems.vxipmi.connection.ConnectionManager;
 import com.veraxsystems.vxipmi.connection.queue.MessageQueue;
 import com.veraxsystems.vxipmi.transport.UdpMessenger;
+import junit.framework.TestCase;
+import org.apache.log4j.Logger;
+import org.junit.Test;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Tests the {@link ConnectionManager} class.

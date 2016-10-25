@@ -11,15 +11,15 @@
  */
 package com.veraxsystems.vxipmi.coding;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
 import com.veraxsystems.vxipmi.coding.commands.IpmiCommandCoder;
 import com.veraxsystems.vxipmi.coding.protocol.decoder.Protocolv15Decoder;
 import com.veraxsystems.vxipmi.coding.protocol.decoder.Protocolv20Decoder;
 import com.veraxsystems.vxipmi.coding.protocol.encoder.IpmiEncoder;
 import com.veraxsystems.vxipmi.coding.rmcp.RmcpEncoder;
 import com.veraxsystems.vxipmi.coding.rmcp.RmcpIpmiMessage;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Creates RMCP packet containing encrypted IPMI command from IPMICommand

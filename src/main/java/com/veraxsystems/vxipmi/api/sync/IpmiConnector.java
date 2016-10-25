@@ -11,14 +11,6 @@
  */
 package com.veraxsystems.vxipmi.api.sync;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.List;
-import java.util.Random;
-
-import org.apache.log4j.Logger;
-
 import com.veraxsystems.vxipmi.api.async.ConnectionHandle;
 import com.veraxsystems.vxipmi.api.async.IpmiAsyncConnector;
 import com.veraxsystems.vxipmi.coding.commands.IpmiCommandCoder;
@@ -32,6 +24,13 @@ import com.veraxsystems.vxipmi.common.PropertiesManager;
 import com.veraxsystems.vxipmi.connection.Connection;
 import com.veraxsystems.vxipmi.connection.ConnectionException;
 import com.veraxsystems.vxipmi.connection.ConnectionManager;
+import org.apache.log4j.Logger;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.List;
+import java.util.Random;
 
 /**
  * <p> Synchronous API for connecting to BMC via IPMI. </p> <p> Creating connection consists of the following steps:

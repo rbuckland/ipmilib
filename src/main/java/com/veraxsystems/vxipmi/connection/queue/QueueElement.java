@@ -11,16 +11,14 @@
  */
 package com.veraxsystems.vxipmi.connection.queue;
 
-import java.util.Date;
-
 import com.veraxsystems.vxipmi.coding.commands.IpmiCommandCoder;
 import com.veraxsystems.vxipmi.coding.commands.ResponseData;
 
+import java.util.Date;
+
 public class QueueElement {
 	private int id;
-	@Deprecated
-	private int retries;
-	
+
 	private IpmiCommandCoder request;
 	private ResponseData response;
 	private Date timestamp;
@@ -29,7 +27,6 @@ public class QueueElement {
 		this.id = id;
 		this.request = request;
 		timestamp = new Date();
-		retries = 0;
 	}
 
 	public int getId() {
@@ -40,16 +37,6 @@ public class QueueElement {
 		this.id = id;
 	}
 	
-	@Deprecated
-	public int getRetries() {
-		return retries;
-	}
-
-	@Deprecated
-	public void setRetries(int retries) {
-		this.retries = retries;
-	}
-
 	public IpmiCommandCoder getRequest() {
 		return request;
 	}

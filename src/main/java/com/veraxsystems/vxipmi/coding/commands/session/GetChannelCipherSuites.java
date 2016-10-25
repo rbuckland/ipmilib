@@ -11,9 +11,6 @@
  */
 package com.veraxsystems.vxipmi.coding.commands.session;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
 import com.veraxsystems.vxipmi.coding.commands.CommandCodes;
 import com.veraxsystems.vxipmi.coding.commands.IpmiCommandCoder;
 import com.veraxsystems.vxipmi.coding.commands.IpmiVersion;
@@ -29,6 +26,9 @@ import com.veraxsystems.vxipmi.coding.protocol.PayloadType;
 import com.veraxsystems.vxipmi.coding.security.CipherSuite;
 import com.veraxsystems.vxipmi.coding.security.ConfidentialityNone;
 import com.veraxsystems.vxipmi.common.TypeConverter;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Wrapper for RMCP+ Get Channel Cipher Suites command. This command can be

@@ -11,14 +11,6 @@
  */
 package com.veraxsystems.vxipmi.api.async;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.log4j.Logger;
-
 import com.veraxsystems.vxipmi.api.async.messages.IpmiError;
 import com.veraxsystems.vxipmi.api.async.messages.IpmiResponse;
 import com.veraxsystems.vxipmi.api.async.messages.IpmiResponseData;
@@ -32,6 +24,13 @@ import com.veraxsystems.vxipmi.connection.Connection;
 import com.veraxsystems.vxipmi.connection.ConnectionException;
 import com.veraxsystems.vxipmi.connection.ConnectionListener;
 import com.veraxsystems.vxipmi.connection.ConnectionManager;
+import org.apache.log4j.Logger;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>

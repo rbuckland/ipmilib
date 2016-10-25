@@ -11,9 +11,9 @@
  */
 package com.veraxsystems.vxipmi.coding.payload;
 
-import java.security.InvalidKeyException;
-
 import com.veraxsystems.vxipmi.coding.security.ConfidentialityAlgorithm;
+
+import java.security.InvalidKeyException;
 
 /**
  * Payload for IPMI messages

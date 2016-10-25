@@ -11,9 +11,9 @@
  */
 package com.veraxsystems.vxipmi.coding.commands.fru.record;
 
-import java.nio.charset.Charset;
-
 import com.veraxsystems.vxipmi.common.TypeConverter;
+
+import java.nio.charset.Charset;
 
 /**
  * General class for FRU Inventory area records.

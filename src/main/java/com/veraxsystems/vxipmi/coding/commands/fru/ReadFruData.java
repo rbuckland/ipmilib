@@ -11,20 +11,11 @@
  */
 package com.veraxsystems.vxipmi.coding.commands.fru;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.veraxsystems.vxipmi.coding.commands.CommandCodes;
 import com.veraxsystems.vxipmi.coding.commands.IpmiCommandCoder;
 import com.veraxsystems.vxipmi.coding.commands.IpmiVersion;
 import com.veraxsystems.vxipmi.coding.commands.ResponseData;
-import com.veraxsystems.vxipmi.coding.commands.fru.record.BoardInfo;
-import com.veraxsystems.vxipmi.coding.commands.fru.record.ChassisInfo;
-import com.veraxsystems.vxipmi.coding.commands.fru.record.FruRecord;
-import com.veraxsystems.vxipmi.coding.commands.fru.record.MultiRecordInfo;
-import com.veraxsystems.vxipmi.coding.commands.fru.record.ProductInfo;
+import com.veraxsystems.vxipmi.coding.commands.fru.record.*;
 import com.veraxsystems.vxipmi.coding.commands.sdr.GetSdr;
 import com.veraxsystems.vxipmi.coding.commands.sdr.record.FruDeviceLocatorRecord;
 import com.veraxsystems.vxipmi.coding.payload.CompletionCode;
@@ -37,6 +28,11 @@ import com.veraxsystems.vxipmi.coding.protocol.AuthenticationType;
 import com.veraxsystems.vxipmi.coding.protocol.IpmiMessage;
 import com.veraxsystems.vxipmi.coding.security.CipherSuite;
 import com.veraxsystems.vxipmi.common.TypeConverter;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A wrapper class for Read FRU Data Command request. <br>

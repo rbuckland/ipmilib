@@ -11,32 +11,30 @@
  */
 package com.veraxsystems.vxipmi.connection.queue;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.apache.log4j.Logger;
-
 import com.veraxsystems.vxipmi.coding.commands.IpmiCommandCoder;
 import com.veraxsystems.vxipmi.common.PropertiesManager;
 import com.veraxsystems.vxipmi.connection.Connection;
 import com.veraxsystems.vxipmi.connection.ConnectionException;
+import org.apache.log4j.Logger;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.TimerTask;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * Queues messages to send and checks for timeouts.
  */
-public class MessageQueue extends TimerTask {
+public class MessageQueue implements Runnable {
 
-	private List<QueueElement> queue;
+	private final ScheduledFuture<?> timerTask;
+	private final List<QueueElement> queue;
 	private int timeout;
-	private Timer timer;
 	private Connection connection;
 	private int lastSequenceNumber;
-	private Object lastSequenceNumberLock = new Object();
+	private final Object lastSequenceNumberLock = new Object();
 
 	private static Logger logger = Logger.getLogger(MessageQueue.class);
 
@@ -60,7 +58,7 @@ public class MessageQueue extends TimerTask {
 		this.timeout = timeout;
 	}
 
-    public MessageQueue(Connection connection, int timeout) throws FileNotFoundException, IOException {
+    public MessageQueue(Connection connection, int timeout) throws IOException {
         if (cleaningFrequency == -1) {
             cleaningFrequency = Integer.parseInt(PropertiesManager.getInstance().getProperty("cleaningFrequency"));
         }
@@ -69,15 +67,14 @@ public class MessageQueue extends TimerTask {
         this.connection = connection;
         queue = new ArrayList<QueueElement>();
         setTimeout(timeout);
-        timer = new Timer();
-        timer.schedule(this, cleaningFrequency, cleaningFrequency);
+        timerTask = connection.startTimer(this, cleaningFrequency);
 	}
 
 	/**
 	 * Stops the MessageQueue
 	 */
 	public void tearDown() {
-		timer.cancel();
+		this.timerTask.cancel(true);
 	}
 
 	private List<Integer> reservedTags;
@@ -86,10 +83,7 @@ public class MessageQueue extends TimerTask {
 	 * Check if the tag is reserved.
 	 */
 	private synchronized boolean isReserved(int tag) {
-		if (reservedTags.contains(tag)) {
-			return true;
-		}
-		return false;
+		return reservedTags.contains(tag);
 	}
 
 	/**
@@ -198,37 +192,6 @@ public class MessageQueue extends TimerTask {
 	}
 
 	/**
-	 * Removes message from queue at given index.
-	 * 
-	 * @param index
-	 */
-	public void removeAt(int index) {
-		if (index >= queue.size()) {
-			throw new IndexOutOfBoundsException("Index out of bounds : "
-					+ index);
-		}
-
-		remove(queue.get(index).getId() % 64);
-	}
-
-	/**
-	 * Checks if queue contains message with the given sequence number.
-	 */
-	public boolean containsId(int sequenceNumber) {
-		synchronized (queue) {
-
-			for (QueueElement element : queue) {
-				if (element.getId() == sequenceNumber
-						&& element.getRequest() != null) {
-					return true;
-				}
-			}
-
-		}
-		return false;
-	}
-
-	/**
 	 * Returns valid session sequence number that cannot be used as a tag though
 	 */
 	public int getSequenceNumber() {
@@ -258,57 +221,6 @@ public class MessageQueue extends TimerTask {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Returns index of the message with the given sequence number from the
-	 * queue or -1 if no message with the given tag is currently in the queue.
-	 */
-	public int getMessageIndexFromQueue(int tag) {
-		synchronized (queue) {
-			int i = 0;
-			for (QueueElement element : queue) {
-				if (element.getId() % 64 == tag && element.getRequest() != null) {
-					return i;
-				}
-				++i;
-			}
-		}
-		return -1;
-	}
-
-	/**
-	 * Returns number of retries that were performed on message tagged with tag
-	 * or -1 if no such message can be found in the queue.
-	 */
-	@Deprecated
-	public int getMessageRetries(int tag) {
-		synchronized (queue) {
-			for (QueueElement element : queue) {
-				if (element.getId() % 64 == tag && element.getRequest() != null) {
-					return element.getRetries();
-				}
-			}
-		}
-		return -1;
-	}
-
-	/**
-	 * Returns the ID of the {@link QueueElement} in the queue with the given
-	 * tag.
-	 * 
-	 * @param tag
-	 *            Tag of the message to find
-	 */
-	public int getMessageSequenceNumber(int tag) {
-		synchronized (queue) {
-			for (QueueElement element : queue) {
-				if (element.getId() % 64 == tag && element.getRequest() != null) {
-					return element.getId();
-				}
-			}
-		}
-		return -1;
 	}
 
 	/**
