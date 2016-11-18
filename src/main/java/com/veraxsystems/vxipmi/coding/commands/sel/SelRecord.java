@@ -11,12 +11,12 @@
  */
 package com.veraxsystems.vxipmi.coding.commands.sel;
 
-import java.util.Date;
-
 import com.veraxsystems.vxipmi.coding.commands.sdr.record.FullSensorRecord;
 import com.veraxsystems.vxipmi.coding.commands.sdr.record.ReadingType;
 import com.veraxsystems.vxipmi.coding.commands.sdr.record.SensorType;
 import com.veraxsystems.vxipmi.common.TypeConverter;
+
+import java.util.Date;
 
 public class SelRecord {
 	

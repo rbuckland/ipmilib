@@ -11,18 +11,6 @@
  */
 package com.veraxsystems.vximpi.test;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Properties;
-
-import junit.framework.TestCase;
-
-import org.apache.log4j.Logger;
-import org.junit.Test;
-
 import com.veraxsystems.vxipmi.coding.commands.IpmiVersion;
 import com.veraxsystems.vxipmi.coding.commands.PrivilegeLevel;
 import com.veraxsystems.vxipmi.coding.commands.sel.ReserveSel;
@@ -31,6 +19,18 @@ import com.veraxsystems.vxipmi.coding.security.CipherSuite;
 import com.veraxsystems.vxipmi.connection.Connection;
 import com.veraxsystems.vxipmi.connection.ConnectionException;
 import com.veraxsystems.vxipmi.transport.UdpMessenger;
+import junit.framework.TestCase;
+import org.apache.log4j.Logger;
+import org.junit.Test;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Properties;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Tests for the {@link Connection} class.
@@ -39,6 +39,7 @@ public class ConnectionTest extends TestCase {
 
 	private UdpMessenger messenger;
 	private Connection connection;
+	private ScheduledExecutorService scheduler;
 	private CipherSuite cs;
 	private Properties properties;
 	
@@ -51,11 +52,12 @@ public class ConnectionTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		scheduler = Executors.newScheduledThreadPool(1);
 		properties = new Properties();
 		properties.load(new FileInputStream(
 				"src/test/resources/test.properties"));
 		messenger = new UdpMessenger(PORT);
-		connection = new Connection(messenger, 0);
+		connection = new Connection(scheduler, messenger, 0);
 	}
 
 	@Override
@@ -170,6 +172,7 @@ public class ConnectionTest extends TestCase {
 		for (int j = 0; j < 3; ++j) {
 			for (int i = 0; i < 3; ++i) {
 				SessionRunner sr = new SessionRunner(
+						scheduler,
 						InetAddress.getByName(properties.getProperty("testIp")),
 						messenger);
 				sr.start();

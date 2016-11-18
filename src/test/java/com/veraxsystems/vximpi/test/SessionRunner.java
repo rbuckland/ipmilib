@@ -11,14 +11,6 @@
  */
 package com.veraxsystems.vximpi.test;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.Properties;
-
-import org.apache.log4j.Logger;
-
 import com.veraxsystems.vxipmi.coding.commands.IpmiVersion;
 import com.veraxsystems.vxipmi.coding.commands.PrivilegeLevel;
 import com.veraxsystems.vxipmi.coding.commands.sel.ReserveSel;
@@ -29,20 +21,29 @@ import com.veraxsystems.vxipmi.connection.Connection;
 import com.veraxsystems.vxipmi.connection.ConnectionException;
 import com.veraxsystems.vxipmi.connection.ConnectionManager;
 import com.veraxsystems.vxipmi.transport.UdpMessenger;
+import org.apache.log4j.Logger;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.Properties;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Test utility class, runs a session in a new {@link Thread}
  */
 public class SessionRunner extends Thread {
 
+	private final ScheduledExecutorService scheduler;
 	private InetAddress address;
 	private UdpMessenger messenger;
 	private Connection connection;
-	private CipherSuite cs;
-	
+
 	private static Logger logger = Logger.getLogger(SessionRunner.class);
 
-	public SessionRunner(InetAddress address, UdpMessenger messenger) {
+	SessionRunner(ScheduledExecutorService scheduler, InetAddress address, UdpMessenger messenger) {
+		this.scheduler = scheduler;
 		this.address = address;
 		this.messenger = messenger;
 	}
@@ -63,7 +64,7 @@ public class SessionRunner extends Thread {
 
 		for (int i = 0; i < 1; ++i) {
 			try {
-				connection = new Connection(messenger, i);
+				connection = new Connection(scheduler, messenger, i);
 				connection.connect(address, 30000);
 			} catch (FileNotFoundException e1) {
 				e1.printStackTrace();
@@ -74,7 +75,7 @@ public class SessionRunner extends Thread {
 			try {
 				int tag = ConnectionManager.generateSessionlessTag();
 				Thread.sleep(Math.abs(Randomizer.getInt()) % 200);
-				cs = connection.getAvailableCipherSuites(tag).get(2);
+				CipherSuite cs = connection.getAvailableCipherSuites(tag).get(2);
 				Thread.sleep(Math.abs(Randomizer.getInt()) % 200);
 				connection.getChannelAuthenticationCapabilities(tag, cs,
 						PrivilegeLevel.User);

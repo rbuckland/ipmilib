@@ -11,10 +11,9 @@
  */
 package com.veraxsystems.vxipmi.coding.security;
 
+import javax.crypto.NoSuchPaddingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.NoSuchPaddingException;
 
 /**
  * Interface for Confidentiality Algorithms. All classes extending this one must

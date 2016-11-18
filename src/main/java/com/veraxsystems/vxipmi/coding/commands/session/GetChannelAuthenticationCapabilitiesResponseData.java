@@ -11,10 +11,10 @@
  */
 package com.veraxsystems.vxipmi.coding.commands.session;
 
-import java.util.Collection;
-
 import com.veraxsystems.vxipmi.coding.commands.ResponseData;
 import com.veraxsystems.vxipmi.coding.protocol.AuthenticationType;
+
+import java.util.Collection;
 
 /**
  * A wrapper for Get Channel Authentication Capabilities command response

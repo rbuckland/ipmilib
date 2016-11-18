@@ -11,10 +11,10 @@
  */
 package com.veraxsystems.vxipmi.coding.protocol;
 
-import java.security.InvalidKeyException;
-
 import com.veraxsystems.vxipmi.coding.protocol.encoder.IpmiEncoder;
 import com.veraxsystems.vxipmi.coding.security.ConfidentialityAlgorithm;
+
+import java.security.InvalidKeyException;
 
 /**
  * Wrapper class for IPMI v2.0 message

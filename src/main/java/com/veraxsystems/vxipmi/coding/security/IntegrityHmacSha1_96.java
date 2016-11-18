@@ -11,11 +11,10 @@
  */
 package com.veraxsystems.vxipmi.coding.security;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * HMAC-SHA1-96 integrity algorithm.

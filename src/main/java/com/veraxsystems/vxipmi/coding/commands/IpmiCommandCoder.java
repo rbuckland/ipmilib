@@ -11,22 +11,18 @@
  */
 package com.veraxsystems.vxipmi.coding.commands;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
 import com.veraxsystems.vxipmi.coding.payload.IpmiPayload;
 import com.veraxsystems.vxipmi.coding.payload.PlainMessage;
 import com.veraxsystems.vxipmi.coding.payload.lan.IPMIException;
 import com.veraxsystems.vxipmi.coding.payload.lan.IpmiLanResponse;
 import com.veraxsystems.vxipmi.coding.payload.lan.NetworkFunction;
-import com.veraxsystems.vxipmi.coding.protocol.AuthenticationType;
-import com.veraxsystems.vxipmi.coding.protocol.IpmiMessage;
-import com.veraxsystems.vxipmi.coding.protocol.Ipmiv15Message;
-import com.veraxsystems.vxipmi.coding.protocol.Ipmiv20Message;
-import com.veraxsystems.vxipmi.coding.protocol.PayloadType;
+import com.veraxsystems.vxipmi.coding.protocol.*;
 import com.veraxsystems.vxipmi.coding.protocol.encoder.Protocolv20Encoder;
 import com.veraxsystems.vxipmi.coding.security.CipherSuite;
 import com.veraxsystems.vxipmi.coding.security.SecurityConstants;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * A wrapper for IPMI command.

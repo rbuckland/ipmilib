@@ -11,9 +11,9 @@
  */
 package com.veraxsystems.vxipmi.coding.commands.sdr.record;
 
-import java.nio.charset.Charset;
-
 import com.veraxsystems.vxipmi.common.TypeConverter;
+
+import java.nio.charset.Charset;
 
 /**
  * Wrapper for SDR entry.

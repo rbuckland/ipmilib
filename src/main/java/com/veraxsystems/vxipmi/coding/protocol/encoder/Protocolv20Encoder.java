@@ -11,13 +11,13 @@
  */
 package com.veraxsystems.vxipmi.coding.protocol.encoder;
 
-import java.security.InvalidKeyException;
-
 import com.veraxsystems.vxipmi.coding.protocol.AuthenticationType;
 import com.veraxsystems.vxipmi.coding.protocol.IpmiMessage;
 import com.veraxsystems.vxipmi.coding.protocol.Ipmiv20Message;
 import com.veraxsystems.vxipmi.coding.protocol.PayloadType;
 import com.veraxsystems.vxipmi.common.TypeConverter;
+
+import java.security.InvalidKeyException;
 
 /**
  * Encodes IPMI v2.0 message.

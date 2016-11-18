@@ -11,16 +11,12 @@
  */
 package com.veraxsystems.vxipmi.transport;
 
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.log4j.Logger;
 
 /**
  * Handles the UDP connection.
@@ -31,20 +27,12 @@ public class UdpMessenger extends Thread implements Messenger {
 
 	private DatagramSocket socket;
 
-	private List<UdpListener> listeners;
+	private final List<UdpListener> listeners;
 
 	private boolean closing = false;
 
 	private static final String DEFAULT_ADDRESS = "0.0.0.0";
 
-	/**
-	 * Size of the message data buffer. Default
-	 * {@link UdpMessenger#DEFAULTBUFFERSIZE}.
-	 */
-	private int bufferSize;
-
-	private static final int DEFAULTBUFFERSIZE = 512;
-	
 	private static Logger logger = Logger.getLogger(UdpMessenger.class);
 
 	public int getPort() {
@@ -61,6 +49,7 @@ public class UdpMessenger extends Thread implements Messenger {
 	 *             if the socket could not be opened, or the socket could not
 	 *             bind to the specified local port.
 	 * @throws UnknownHostException
+	 *             When the host name cannot be resolved
 	 */
 	public UdpMessenger(int port) throws SocketException, UnknownHostException {
 		this(port, InetAddress.getByName(DEFAULT_ADDRESS));
@@ -82,24 +71,9 @@ public class UdpMessenger extends Thread implements Messenger {
 		sentPackets = 0;
 		this.port = port;
 		listeners = new ArrayList<UdpListener>();
-		bufferSize = DEFAULTBUFFERSIZE;
 		socket = new DatagramSocket(this.port, address);
 		socket.setSoTimeout(0);
 		this.start();
-	}
-
-	/**
-	 * Sets message data buffer size to bufferSize.
-	 */
-	public void setBufferSize(int bufferSize) {
-		this.bufferSize = bufferSize;
-	}
-
-	/**
-	 * @return Size of the message data buffer
-	 */
-	public int getBufferSize() {
-		return bufferSize;
 	}
 
 	@Override

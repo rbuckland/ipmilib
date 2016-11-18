@@ -11,31 +11,14 @@
  */
 package com.veraxsystems.vximpi.test;
 
-import java.io.FileInputStream;
-import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
-import org.apache.log4j.Logger;
-import org.junit.Test;
-
 import com.veraxsystems.vxipmi.coding.commands.IpmiCommandCoder;
 import com.veraxsystems.vxipmi.coding.commands.IpmiVersion;
 import com.veraxsystems.vxipmi.coding.commands.PrivilegeLevel;
 import com.veraxsystems.vxipmi.coding.commands.ResponseData;
 import com.veraxsystems.vxipmi.coding.commands.chassis.GetChassisStatus;
-import com.veraxsystems.vxipmi.coding.commands.fru.BaseUnit;
-import com.veraxsystems.vxipmi.coding.commands.fru.GetFruInventoryAreaInfo;
-import com.veraxsystems.vxipmi.coding.commands.fru.GetFruInventoryAreaInfoResponseData;
-import com.veraxsystems.vxipmi.coding.commands.fru.ReadFruData;
-import com.veraxsystems.vxipmi.coding.commands.fru.ReadFruDataResponseData;
+import com.veraxsystems.vxipmi.coding.commands.fru.*;
 import com.veraxsystems.vxipmi.coding.commands.fru.record.FruRecord;
-import com.veraxsystems.vxipmi.coding.commands.sdr.GetSdr;
-import com.veraxsystems.vxipmi.coding.commands.sdr.GetSdrRepositoryInfo;
-import com.veraxsystems.vxipmi.coding.commands.sdr.GetSensorReading;
-import com.veraxsystems.vxipmi.coding.commands.sdr.ReserveSdrRepository;
-import com.veraxsystems.vxipmi.coding.commands.sdr.ReserveSdrRepositoryResponseData;
+import com.veraxsystems.vxipmi.coding.commands.sdr.*;
 import com.veraxsystems.vxipmi.coding.commands.sel.GetSelEntry;
 import com.veraxsystems.vxipmi.coding.commands.sel.GetSelInfo;
 import com.veraxsystems.vxipmi.coding.commands.sel.ReserveSel;
@@ -46,8 +29,15 @@ import com.veraxsystems.vxipmi.connection.Connection;
 import com.veraxsystems.vxipmi.connection.ConnectionException;
 import com.veraxsystems.vxipmi.connection.ConnectionListener;
 import com.veraxsystems.vxipmi.connection.ConnectionManager;
-
 import junit.framework.TestCase;
+import org.apache.log4j.Logger;
+import org.junit.Test;
+
+import java.io.FileInputStream;
+import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Tests message encoders and decoders.

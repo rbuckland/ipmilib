@@ -11,16 +11,12 @@
  */
 package com.veraxsystems.vxipmi.coding.commands.sdr;
 
+import com.veraxsystems.vxipmi.coding.commands.ResponseData;
+import com.veraxsystems.vxipmi.coding.commands.sdr.record.*;
+import com.veraxsystems.vxipmi.common.TypeConverter;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.veraxsystems.vxipmi.coding.commands.ResponseData;
-import com.veraxsystems.vxipmi.coding.commands.sdr.record.CompactSensorRecord;
-import com.veraxsystems.vxipmi.coding.commands.sdr.record.EventOnlyRecord;
-import com.veraxsystems.vxipmi.coding.commands.sdr.record.ReadingType;
-import com.veraxsystems.vxipmi.coding.commands.sdr.record.FullSensorRecord;
-import com.veraxsystems.vxipmi.coding.commands.sdr.record.SensorType;
-import com.veraxsystems.vxipmi.common.TypeConverter;
 
 /**
  * Wrapper for Get Sensor Reading response.

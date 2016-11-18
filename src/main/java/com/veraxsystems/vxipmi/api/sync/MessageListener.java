@@ -11,9 +11,6 @@
  */
 package com.veraxsystems.vxipmi.api.sync;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.veraxsystems.vxipmi.api.async.ConnectionHandle;
 import com.veraxsystems.vxipmi.api.async.IpmiAsyncConnector;
 import com.veraxsystems.vxipmi.api.async.IpmiListener;
@@ -22,6 +19,9 @@ import com.veraxsystems.vxipmi.api.async.messages.IpmiResponse;
 import com.veraxsystems.vxipmi.api.async.messages.IpmiResponseData;
 import com.veraxsystems.vxipmi.coding.commands.ResponseData;
 import com.veraxsystems.vxipmi.connection.Connection;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Listens to the {@link IpmiAsyncConnector} waiting for concrete message to

@@ -11,23 +11,19 @@
  */
 package com.veraxsystems.vxipmi.coding.commands.chassis;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
 import com.veraxsystems.vxipmi.coding.commands.CommandCodes;
 import com.veraxsystems.vxipmi.coding.commands.IpmiCommandCoder;
 import com.veraxsystems.vxipmi.coding.commands.IpmiVersion;
 import com.veraxsystems.vxipmi.coding.commands.ResponseData;
 import com.veraxsystems.vxipmi.coding.payload.CompletionCode;
-import com.veraxsystems.vxipmi.coding.payload.lan.IPMIException;
-import com.veraxsystems.vxipmi.coding.payload.lan.IpmiLanMessage;
-import com.veraxsystems.vxipmi.coding.payload.lan.IpmiLanRequest;
-import com.veraxsystems.vxipmi.coding.payload.lan.IpmiLanResponse;
-import com.veraxsystems.vxipmi.coding.payload.lan.NetworkFunction;
+import com.veraxsystems.vxipmi.coding.payload.lan.*;
 import com.veraxsystems.vxipmi.coding.protocol.AuthenticationType;
 import com.veraxsystems.vxipmi.coding.protocol.IpmiMessage;
 import com.veraxsystems.vxipmi.coding.security.CipherSuite;
 import com.veraxsystems.vxipmi.common.TypeConverter;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Wrapper class for Get Chassis Status request.

@@ -11,26 +11,11 @@
  */
 package com.veraxsystems.vxipmi.connection;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.apache.log4j.Logger;
-
 import com.veraxsystems.vxipmi.coding.commands.IpmiCommandCoder;
 import com.veraxsystems.vxipmi.coding.commands.IpmiVersion;
 import com.veraxsystems.vxipmi.coding.commands.PrivilegeLevel;
 import com.veraxsystems.vxipmi.coding.commands.ResponseData;
-import com.veraxsystems.vxipmi.coding.commands.session.GetChannelAuthenticationCapabilities;
-import com.veraxsystems.vxipmi.coding.commands.session.GetChannelAuthenticationCapabilitiesResponseData;
-import com.veraxsystems.vxipmi.coding.commands.session.GetChannelCipherSuitesResponseData;
-import com.veraxsystems.vxipmi.coding.commands.session.OpenSessionResponseData;
-import com.veraxsystems.vxipmi.coding.commands.session.Rakp1ResponseData;
-import com.veraxsystems.vxipmi.coding.commands.session.Rakp3ResponseData;
+import com.veraxsystems.vxipmi.coding.commands.session.*;
 import com.veraxsystems.vxipmi.coding.payload.lan.IpmiLanResponse;
 import com.veraxsystems.vxipmi.coding.protocol.Ipmiv20Message;
 import com.veraxsystems.vxipmi.coding.security.CipherSuite;
@@ -40,33 +25,32 @@ import com.veraxsystems.vxipmi.common.TypeConverter;
 import com.veraxsystems.vxipmi.connection.queue.MessageQueue;
 import com.veraxsystems.vxipmi.sm.MachineObserver;
 import com.veraxsystems.vxipmi.sm.StateMachine;
-import com.veraxsystems.vxipmi.sm.actions.ErrorAction;
-import com.veraxsystems.vxipmi.sm.actions.GetSikAction;
-import com.veraxsystems.vxipmi.sm.actions.MessageAction;
-import com.veraxsystems.vxipmi.sm.actions.ResponseAction;
-import com.veraxsystems.vxipmi.sm.actions.StateMachineAction;
-import com.veraxsystems.vxipmi.sm.events.AuthenticationCapabilitiesReceived;
-import com.veraxsystems.vxipmi.sm.events.Authorize;
+import com.veraxsystems.vxipmi.sm.actions.*;
+import com.veraxsystems.vxipmi.sm.events.*;
 import com.veraxsystems.vxipmi.sm.events.CloseSession;
-import com.veraxsystems.vxipmi.sm.events.Default;
-import com.veraxsystems.vxipmi.sm.events.DefaultAck;
-import com.veraxsystems.vxipmi.sm.events.GetChannelCipherSuitesPending;
-import com.veraxsystems.vxipmi.sm.events.OpenSessionAck;
-import com.veraxsystems.vxipmi.sm.events.Rakp2Ack;
-import com.veraxsystems.vxipmi.sm.events.Sendv20Message;
-import com.veraxsystems.vxipmi.sm.events.StartSession;
-import com.veraxsystems.vxipmi.sm.events.Timeout;
 import com.veraxsystems.vxipmi.sm.states.Authcap;
 import com.veraxsystems.vxipmi.sm.states.Ciphers;
 import com.veraxsystems.vxipmi.sm.states.SessionValid;
 import com.veraxsystems.vxipmi.sm.states.Uninitialized;
 import com.veraxsystems.vxipmi.transport.Messenger;
+import org.apache.log4j.Logger;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TimerTask;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A connection with the specific remote host.
  */
-public class Connection extends TimerTask implements MachineObserver {
+public class Connection implements Runnable, MachineObserver {
 	private List<ConnectionListener> listeners;
+	private final ScheduledExecutorService timer;
 	private StateMachine stateMachine;
 	/**
 	 * Time in ms after which a message times out.
@@ -79,6 +63,7 @@ public class Connection extends TimerTask implements MachineObserver {
 	private byte[] sik;
 	private int handle;
 	private int lastReceivedSequenceNumber = 0;
+	private ScheduledFuture<?> timerTask;
 
 	private Logger logger = Logger.getLogger(getClass());
 
@@ -88,7 +73,6 @@ public class Connection extends TimerTask implements MachineObserver {
 
 	private MessageQueue messageQueue;
 
-	private Timer timer;
 
 	public int getTimeout() {
 		return timeout;
@@ -101,7 +85,9 @@ public class Connection extends TimerTask implements MachineObserver {
 
 	/**
 	 * Creates the connection.
-	 * 
+	 *
+	 * @param timer
+	 *            - The timer of timing tasks
 	 * @param messenger
 	 *            - {@link Messenger} associated with the proper
 	 *            {@link Constants#IPMI_PORT}
@@ -112,8 +98,9 @@ public class Connection extends TimerTask implements MachineObserver {
 	 * @throws FileNotFoundException
 	 *             - when properties file was not found
 	 */
-    public Connection(Messenger messenger, int handle) throws FileNotFoundException, IOException {
-        stateMachine = new StateMachine(messenger);
+    public Connection(ScheduledExecutorService timer, Messenger messenger, int handle) throws IOException {
+		this.timer = timer;
+		stateMachine = new StateMachine(messenger);
         this.handle = handle;
         listeners = new ArrayList<ConnectionListener>();
         timeout = Integer.parseInt(PropertiesManager.getInstance().getProperty("timeout"));
@@ -154,11 +141,9 @@ public class Connection extends TimerTask implements MachineObserver {
 	 *             - when properties file was not found
 	 * @see #disconnect()
 	 */
-	public void connect(InetAddress address, int pingPeriod)
-			throws FileNotFoundException, IOException {
+	public void connect(InetAddress address, int pingPeriod) throws IOException {
 		messageQueue = new MessageQueue(this, timeout);
-		timer = new Timer();
-		timer.schedule(this, pingPeriod, pingPeriod);
+		timerTask = startTimer(this, pingPeriod);
 		stateMachine.register(this);
 		stateMachine.start(address);
 	}
@@ -169,7 +154,7 @@ public class Connection extends TimerTask implements MachineObserver {
 	 * @see #connect(InetAddress, int)
 	 */
 	public void disconnect() {
-		timer.cancel();
+		timerTask.cancel(true);
 		stateMachine.stop();
 		messageQueue.tearDown();
 	}
@@ -182,7 +167,7 @@ public class Connection extends TimerTask implements MachineObserver {
 	 * @see #connect(InetAddress, int)
 	 * @see #disconnect()
 	 */
-	public boolean isActive() {
+	boolean isActive() {
 		return stateMachine.isActive();
 	}
 
@@ -489,46 +474,6 @@ public class Connection extends TimerTask implements MachineObserver {
 		return seq % 64;
 	}
 
-	/**
-	 * Attempts to retry sending a message (message will be sent only if current
-	 * number of retries does not exceed and is not equal to maxAllowedRetries. <br>
-	 * IMPORTANT <br>
-	 * Tag of the message changes (a new one is a return value of this
-	 * function).
-	 * 
-	 * @param tag
-	 *            - tag of the message to retry
-	 * @param maxAllowedRetries
-	 *            - maximum number of retries that are allowed to be performed
-	 * @return new tag if message was retried, -1 if operation failed
-	 * @throws ConnectionException
-	 *             when connection isn't in state where sending commands is
-	 *             allowed
-	 * @throws ArithmeticException
-	 *             when {@link Connection} runs out of available ID's for the
-	 *             messages. If this happens session needs to be restarted.
-	 */
-	@Deprecated
-	public int retry(int tag, int maxAllowedRetries)
-			throws ArithmeticException, ConnectionException {
-
-		int retries = messageQueue.getMessageRetries(tag);
-
-		if (retries < 0 || retries >= maxAllowedRetries) {
-			return -1;
-		}
-
-		IpmiCommandCoder coder = messageQueue.getMessageFromQueue(tag);
-
-		if (coder == null) {
-			return -1;
-		}
-
-		messageQueue.remove(tag);
-
-		return sendIpmiCommand(coder);
-	}
-
 	private void handleIncomingMessage(Ipmiv20Message message)
 			throws NullPointerException {
 		int seq = message.getSessionSequenceNumber();
@@ -624,14 +569,14 @@ public class Connection extends TimerTask implements MachineObserver {
 		} while (result <= 0);
 	}
 
-	public InetAddress getRemoteMachineAddress() {
-		return stateMachine.getRemoteMachineAddress();
-	}
-
 	/**
 	 * Checks if session is currently open.
 	 */
 	public boolean isSessionValid() {
 		return stateMachine.getCurrent() instanceof SessionValid;
+	}
+
+	public ScheduledFuture<?> startTimer(Runnable runnable, int period) {
+		return timer.scheduleAtFixedRate(runnable, period, period, TimeUnit.MILLISECONDS);
 	}
 }

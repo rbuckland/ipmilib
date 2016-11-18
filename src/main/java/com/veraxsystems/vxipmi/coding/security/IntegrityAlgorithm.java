@@ -11,10 +11,10 @@
  */
 package com.veraxsystems.vxipmi.coding.security;
 
-import java.security.InvalidKeyException;
-
 import com.veraxsystems.vxipmi.coding.commands.session.Rakp1;
 import com.veraxsystems.vxipmi.common.TypeConverter;
+
+import java.security.InvalidKeyException;
 
 /**
  * Interface for Integrity Algorithms. All classes extending this one must

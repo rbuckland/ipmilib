@@ -11,11 +11,6 @@
  */
 package com.veraxsystems.vxipmi.sm;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.veraxsystems.vxipmi.coding.rmcp.RmcpDecoder;
 import com.veraxsystems.vxipmi.common.Constants;
 import com.veraxsystems.vxipmi.sm.actions.StateMachineAction;
@@ -26,6 +21,11 @@ import com.veraxsystems.vxipmi.sm.states.Uninitialized;
 import com.veraxsystems.vxipmi.transport.Messenger;
 import com.veraxsystems.vxipmi.transport.UdpListener;
 import com.veraxsystems.vxipmi.transport.UdpMessage;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * State machine for connecting and acquiring session with the remote host via

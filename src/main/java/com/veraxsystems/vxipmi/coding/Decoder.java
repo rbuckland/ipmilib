@@ -11,9 +11,6 @@
  */
 package com.veraxsystems.vxipmi.coding;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
 import com.veraxsystems.vxipmi.coding.commands.IpmiCommandCoder;
 import com.veraxsystems.vxipmi.coding.commands.ResponseData;
 import com.veraxsystems.vxipmi.coding.payload.CompletionCode;
@@ -23,6 +20,9 @@ import com.veraxsystems.vxipmi.coding.protocol.decoder.PlainCommandv20Decoder;
 import com.veraxsystems.vxipmi.coding.protocol.decoder.Protocolv15Decoder;
 import com.veraxsystems.vxipmi.coding.protocol.decoder.Protocolv20Decoder;
 import com.veraxsystems.vxipmi.coding.rmcp.RmcpDecoder;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Decodes RMCP packet into {@link ResponseData}.

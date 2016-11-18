@@ -11,12 +11,11 @@
  */
 package com.veraxsystems.vxipmi.coding.security;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 
 /**
  * RAKP-HMAC-SHA1 authentication algorithm.

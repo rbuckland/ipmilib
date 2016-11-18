@@ -11,15 +11,7 @@
  */
 package com.veraxsystems.vxipmi.coding.commands.session;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-
-import com.veraxsystems.vxipmi.coding.commands.CommandCodes;
-import com.veraxsystems.vxipmi.coding.commands.IpmiCommandCoder;
-import com.veraxsystems.vxipmi.coding.commands.IpmiVersion;
-import com.veraxsystems.vxipmi.coding.commands.PrivilegeLevel;
-import com.veraxsystems.vxipmi.coding.commands.ResponseData;
+import com.veraxsystems.vxipmi.coding.commands.*;
 import com.veraxsystems.vxipmi.coding.payload.CompletionCode;
 import com.veraxsystems.vxipmi.coding.payload.IpmiPayload;
 import com.veraxsystems.vxipmi.coding.payload.lan.IPMIException;
@@ -31,6 +23,10 @@ import com.veraxsystems.vxipmi.coding.protocol.IpmiMessage;
 import com.veraxsystems.vxipmi.coding.protocol.Ipmiv15Message;
 import com.veraxsystems.vxipmi.coding.security.CipherSuite;
 import com.veraxsystems.vxipmi.common.TypeConverter;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 /**
  * Wrapper for Get Channel Authentication Capabilities request

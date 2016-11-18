@@ -11,10 +11,10 @@
  */
 package com.veraxsystems.vxipmi.coding.security;
 
+import com.veraxsystems.vxipmi.coding.commands.session.Rakp1;
+
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-
-import com.veraxsystems.vxipmi.coding.commands.session.Rakp1;
 
 /**
  * Interface for authentication algorithms. All classes extending this one must

@@ -1,11 +1,11 @@
 package com.veraxsystems.vxipmi.common;
 
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import org.apache.log4j.Logger;
 
 public class PropertiesManager {
 

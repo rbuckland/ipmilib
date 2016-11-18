@@ -11,19 +11,6 @@
  */
 package com.veraxsystems.vximpi.test;
 
-import static org.junit.Assert.*;
-
-import java.io.FileInputStream;
-import java.net.InetAddress;
-import java.util.Properties;
-
-import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import com.veraxsystems.vxipmi.api.async.ConnectionHandle;
 import com.veraxsystems.vxipmi.api.sync.IpmiConnector;
 import com.veraxsystems.vxipmi.coding.commands.IpmiVersion;
@@ -36,6 +23,15 @@ import com.veraxsystems.vxipmi.coding.commands.sdr.ReserveSdrRepositoryResponseD
 import com.veraxsystems.vxipmi.coding.commands.sdr.record.SensorRecord;
 import com.veraxsystems.vxipmi.coding.protocol.AuthenticationType;
 import com.veraxsystems.vxipmi.coding.security.CipherSuite;
+import org.apache.log4j.Logger;
+import org.junit.*;
+
+import java.io.FileInputStream;
+import java.net.InetAddress;
+import java.util.Properties;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests synchronous API.

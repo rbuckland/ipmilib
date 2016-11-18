@@ -11,16 +11,15 @@
  */
 package com.veraxsystems.vxipmi.coding.security;
 
+import com.veraxsystems.vxipmi.coding.commands.session.GetChannelCipherSuites;
+import com.veraxsystems.vxipmi.coding.commands.session.GetChannelCipherSuitesResponseData;
+import com.veraxsystems.vxipmi.common.TypeConverter;
+
+import javax.crypto.NoSuchPaddingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.crypto.NoSuchPaddingException;
-
-import com.veraxsystems.vxipmi.coding.commands.session.GetChannelCipherSuites;
-import com.veraxsystems.vxipmi.coding.commands.session.GetChannelCipherSuitesResponseData;
-import com.veraxsystems.vxipmi.common.TypeConverter;
 
 /**
  * Provides cipher suite (authentication, confidentiality and integrity

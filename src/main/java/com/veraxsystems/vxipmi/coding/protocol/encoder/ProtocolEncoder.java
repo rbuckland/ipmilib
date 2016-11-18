@@ -11,11 +11,11 @@
  */
 package com.veraxsystems.vxipmi.coding.protocol.encoder;
 
-import java.security.InvalidKeyException;
-
 import com.veraxsystems.vxipmi.coding.protocol.AuthenticationType;
 import com.veraxsystems.vxipmi.coding.protocol.IpmiMessage;
 import com.veraxsystems.vxipmi.common.TypeConverter;
+
+import java.security.InvalidKeyException;
 
 /**
  * Adds IPMI session header to encrypted payload. Should be used to encode

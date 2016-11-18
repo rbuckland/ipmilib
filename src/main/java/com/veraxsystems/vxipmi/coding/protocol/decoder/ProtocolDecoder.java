@@ -11,8 +11,6 @@
  */
 package com.veraxsystems.vxipmi.coding.protocol.decoder;
 
-import java.security.InvalidKeyException;
-
 import com.veraxsystems.vxipmi.coding.payload.IpmiPayload;
 import com.veraxsystems.vxipmi.coding.payload.lan.IpmiLanResponse;
 import com.veraxsystems.vxipmi.coding.protocol.AuthenticationType;
@@ -21,6 +19,8 @@ import com.veraxsystems.vxipmi.coding.rmcp.RmcpClassOfMessage;
 import com.veraxsystems.vxipmi.coding.rmcp.RmcpMessage;
 import com.veraxsystems.vxipmi.coding.security.ConfidentialityAlgorithm;
 import com.veraxsystems.vxipmi.common.TypeConverter;
+
+import java.security.InvalidKeyException;
 
 /**
  * Decodes IPMI session header and retrieves encrypted payload. Payload must be

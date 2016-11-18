@@ -11,9 +11,9 @@
  */
 package com.veraxsystems.vxipmi.coding.commands.sel;
 
-import java.util.Date;
-
 import com.veraxsystems.vxipmi.coding.commands.ResponseData;
+
+import java.util.Date;
 
 /**
  * Wrapper for Get SEL Info response

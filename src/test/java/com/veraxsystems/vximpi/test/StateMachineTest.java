@@ -11,6 +11,27 @@
  */
 package com.veraxsystems.vximpi.test;
 
+import com.veraxsystems.vxipmi.coding.Encoder;
+import com.veraxsystems.vxipmi.coding.commands.IpmiVersion;
+import com.veraxsystems.vxipmi.coding.commands.PrivilegeLevel;
+import com.veraxsystems.vxipmi.coding.commands.ResponseData;
+import com.veraxsystems.vxipmi.coding.commands.sdr.ReserveSdrRepository;
+import com.veraxsystems.vxipmi.coding.commands.session.CloseSession;
+import com.veraxsystems.vxipmi.coding.commands.session.*;
+import com.veraxsystems.vxipmi.coding.payload.lan.IPMIException;
+import com.veraxsystems.vxipmi.coding.protocol.AuthenticationType;
+import com.veraxsystems.vxipmi.coding.protocol.encoder.Protocolv20Encoder;
+import com.veraxsystems.vxipmi.coding.security.*;
+import com.veraxsystems.vxipmi.sm.MachineObserver;
+import com.veraxsystems.vxipmi.sm.StateMachine;
+import com.veraxsystems.vxipmi.sm.actions.*;
+import com.veraxsystems.vxipmi.sm.events.*;
+import com.veraxsystems.vxipmi.sm.states.*;
+import com.veraxsystems.vxipmi.transport.UdpMessenger;
+import junit.framework.TestCase;
+import org.apache.log4j.Logger;
+import org.junit.Test;
+
 import java.io.FileInputStream;
 import java.net.InetAddress;
 import java.net.SocketException;
@@ -19,62 +40,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
-import org.apache.log4j.Logger;
-import org.junit.Test;
-
-import com.veraxsystems.vxipmi.coding.Encoder;
-import com.veraxsystems.vxipmi.coding.commands.IpmiVersion;
-import com.veraxsystems.vxipmi.coding.commands.PrivilegeLevel;
-import com.veraxsystems.vxipmi.coding.commands.ResponseData;
-import com.veraxsystems.vxipmi.coding.commands.sdr.ReserveSdrRepository;
-import com.veraxsystems.vxipmi.coding.commands.session.CloseSession;
-import com.veraxsystems.vxipmi.coding.commands.session.GetChannelAuthenticationCapabilitiesResponseData;
-import com.veraxsystems.vxipmi.coding.commands.session.GetChannelCipherSuitesResponseData;
-import com.veraxsystems.vxipmi.coding.commands.session.OpenSessionResponseData;
-import com.veraxsystems.vxipmi.coding.commands.session.Rakp1ResponseData;
-import com.veraxsystems.vxipmi.coding.commands.session.Rakp3ResponseData;
-import com.veraxsystems.vxipmi.coding.payload.lan.IPMIException;
-import com.veraxsystems.vxipmi.coding.protocol.AuthenticationType;
-import com.veraxsystems.vxipmi.coding.protocol.encoder.Protocolv20Encoder;
-import com.veraxsystems.vxipmi.coding.security.AuthenticationRakpHmacSha1;
-import com.veraxsystems.vxipmi.coding.security.CipherSuite;
-import com.veraxsystems.vxipmi.coding.security.ConfidentialityAesCbc128;
-import com.veraxsystems.vxipmi.coding.security.ConfidentialityNone;
-import com.veraxsystems.vxipmi.coding.security.IntegrityHmacSha1_96;
-import com.veraxsystems.vxipmi.sm.MachineObserver;
-import com.veraxsystems.vxipmi.sm.StateMachine;
-import com.veraxsystems.vxipmi.sm.actions.ErrorAction;
-import com.veraxsystems.vxipmi.sm.actions.GetSikAction;
-import com.veraxsystems.vxipmi.sm.actions.MessageAction;
-import com.veraxsystems.vxipmi.sm.actions.ResponseAction;
-import com.veraxsystems.vxipmi.sm.actions.StateMachineAction;
-import com.veraxsystems.vxipmi.sm.events.AuthenticationCapabilitiesReceived;
-import com.veraxsystems.vxipmi.sm.events.Authorize;
-import com.veraxsystems.vxipmi.sm.events.Default;
-import com.veraxsystems.vxipmi.sm.events.DefaultAck;
-import com.veraxsystems.vxipmi.sm.events.GetChannelCipherSuitesPending;
-import com.veraxsystems.vxipmi.sm.events.OpenSessionAck;
-import com.veraxsystems.vxipmi.sm.events.Rakp2Ack;
-import com.veraxsystems.vxipmi.sm.events.Sendv20Message;
-import com.veraxsystems.vxipmi.sm.events.SessionUpkeep;
-import com.veraxsystems.vxipmi.sm.events.StartSession;
-import com.veraxsystems.vxipmi.sm.events.Timeout;
-import com.veraxsystems.vxipmi.sm.states.Authcap;
-import com.veraxsystems.vxipmi.sm.states.AuthcapWaiting;
-import com.veraxsystems.vxipmi.sm.states.Ciphers;
-import com.veraxsystems.vxipmi.sm.states.CiphersWaiting;
-import com.veraxsystems.vxipmi.sm.states.OpenSessionComplete;
-import com.veraxsystems.vxipmi.sm.states.OpenSessionWaiting;
-import com.veraxsystems.vxipmi.sm.states.Rakp1Complete;
-import com.veraxsystems.vxipmi.sm.states.Rakp1Waiting;
-import com.veraxsystems.vxipmi.sm.states.Rakp3Complete;
-import com.veraxsystems.vxipmi.sm.states.Rakp3Waiting;
-import com.veraxsystems.vxipmi.sm.states.SessionValid;
-import com.veraxsystems.vxipmi.sm.states.Uninitialized;
-import com.veraxsystems.vxipmi.transport.UdpMessenger;
-
-import junit.framework.TestCase;
 
 /**
  * Tests for the {@link StateMachine}

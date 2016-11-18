@@ -11,15 +11,14 @@
  */
 package com.veraxsystems.vxipmi.coding.commands.fru.record;
 
+import com.veraxsystems.vxipmi.common.TypeConverter;
+import org.apache.log4j.Logger;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-
-import org.apache.log4j.Logger;
-
-import com.veraxsystems.vxipmi.common.TypeConverter;
 
 /**
  * FRU record containing Board info. <br>
