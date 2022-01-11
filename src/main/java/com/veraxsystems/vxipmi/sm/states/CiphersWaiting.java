@@ -26,7 +26,10 @@ import com.veraxsystems.vxipmi.common.TypeConverter;
 import com.veraxsystems.vxipmi.sm.StateMachine;
 import com.veraxsystems.vxipmi.sm.actions.ErrorAction;
 import com.veraxsystems.vxipmi.sm.actions.ResponseAction;
-import com.veraxsystems.vxipmi.sm.events.*;
+import com.veraxsystems.vxipmi.sm.events.DefaultAck;
+import com.veraxsystems.vxipmi.sm.events.GetChannelCipherSuitesPending;
+import com.veraxsystems.vxipmi.sm.events.StateMachineEvent;
+import com.veraxsystems.vxipmi.sm.events.Timeout;
 
 /**
  * State at which getting Channel Cipher Suites is in progress. Transits back to

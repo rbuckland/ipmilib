@@ -11,11 +11,6 @@
  */
 package com.veraxsystems.vxipmi.coding.protocol.decoder;
 
-import java.security.InvalidKeyException;
-import java.util.Arrays;
-
-import org.apache.log4j.Logger;
-
 import com.veraxsystems.vxipmi.coding.protocol.AuthenticationType;
 import com.veraxsystems.vxipmi.coding.protocol.IpmiMessage;
 import com.veraxsystems.vxipmi.coding.protocol.Ipmiv20Message;
@@ -24,6 +19,10 @@ import com.veraxsystems.vxipmi.coding.rmcp.RmcpMessage;
 import com.veraxsystems.vxipmi.coding.security.CipherSuite;
 import com.veraxsystems.vxipmi.coding.security.ConfidentialityNone;
 import com.veraxsystems.vxipmi.common.TypeConverter;
+import org.apache.log4j.Logger;
+
+import java.security.InvalidKeyException;
+import java.util.Arrays;
 
 /**
  * Decodes IPMI v2.0 session header and retrieves encrypted payload.

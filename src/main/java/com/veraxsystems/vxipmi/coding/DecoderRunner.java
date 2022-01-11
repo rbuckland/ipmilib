@@ -11,6 +11,32 @@
  */
 package com.veraxsystems.vxipmi.coding;
 
+import com.veraxsystems.vxipmi.coding.commands.IpmiVersion;
+import com.veraxsystems.vxipmi.coding.commands.PrivilegeLevel;
+import com.veraxsystems.vxipmi.coding.commands.chassis.GetChassisStatus;
+import com.veraxsystems.vxipmi.coding.commands.chassis.GetChassisStatusResponseData;
+import com.veraxsystems.vxipmi.coding.commands.fru.*;
+import com.veraxsystems.vxipmi.coding.commands.fru.record.BoardInfo;
+import com.veraxsystems.vxipmi.coding.commands.fru.record.ChassisInfo;
+import com.veraxsystems.vxipmi.coding.commands.fru.record.FruRecord;
+import com.veraxsystems.vxipmi.coding.commands.fru.record.ProductInfo;
+import com.veraxsystems.vxipmi.coding.commands.sdr.*;
+import com.veraxsystems.vxipmi.coding.commands.sdr.record.*;
+import com.veraxsystems.vxipmi.coding.commands.sel.*;
+import com.veraxsystems.vxipmi.coding.commands.session.*;
+import com.veraxsystems.vxipmi.coding.payload.lan.IPMIException;
+import com.veraxsystems.vxipmi.coding.protocol.AuthenticationType;
+import com.veraxsystems.vxipmi.coding.protocol.decoder.PlainCommandv20Decoder;
+import com.veraxsystems.vxipmi.coding.protocol.decoder.Protocolv15Decoder;
+import com.veraxsystems.vxipmi.coding.protocol.decoder.Protocolv20Decoder;
+import com.veraxsystems.vxipmi.coding.protocol.encoder.Protocolv15Encoder;
+import com.veraxsystems.vxipmi.coding.protocol.encoder.Protocolv20Encoder;
+import com.veraxsystems.vxipmi.coding.security.CipherSuite;
+import com.veraxsystems.vxipmi.coding.security.SecurityConstants;
+import com.veraxsystems.vxipmi.common.TypeConverter;
+import org.apache.log4j.Logger;
+
+import javax.crypto.NoSuchPaddingException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -23,66 +49,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-
-import com.veraxsystems.vxipmi.coding.commands.IpmiVersion;
-import com.veraxsystems.vxipmi.coding.commands.PrivilegeLevel;
-import com.veraxsystems.vxipmi.coding.commands.chassis.GetChassisStatus;
-import com.veraxsystems.vxipmi.coding.commands.chassis.GetChassisStatusResponseData;
-import com.veraxsystems.vxipmi.coding.commands.fru.BaseUnit;
-import com.veraxsystems.vxipmi.coding.commands.fru.GetFruInventoryAreaInfo;
-import com.veraxsystems.vxipmi.coding.commands.fru.GetFruInventoryAreaInfoResponseData;
-import com.veraxsystems.vxipmi.coding.commands.fru.ReadFruData;
-import com.veraxsystems.vxipmi.coding.commands.fru.ReadFruDataResponseData;
-import com.veraxsystems.vxipmi.coding.commands.fru.record.BoardInfo;
-import com.veraxsystems.vxipmi.coding.commands.fru.record.ChassisInfo;
-import com.veraxsystems.vxipmi.coding.commands.fru.record.FruRecord;
-import com.veraxsystems.vxipmi.coding.commands.fru.record.ProductInfo;
-import com.veraxsystems.vxipmi.coding.commands.sdr.GetSdr;
-import com.veraxsystems.vxipmi.coding.commands.sdr.GetSdrRepositoryInfo;
-import com.veraxsystems.vxipmi.coding.commands.sdr.GetSdrRepositoryInfoResponseData;
-import com.veraxsystems.vxipmi.coding.commands.sdr.GetSdrResponseData;
-import com.veraxsystems.vxipmi.coding.commands.sdr.GetSensorReading;
-import com.veraxsystems.vxipmi.coding.commands.sdr.GetSensorReadingResponseData;
-import com.veraxsystems.vxipmi.coding.commands.sdr.ReserveSdrRepository;
-import com.veraxsystems.vxipmi.coding.commands.sdr.ReserveSdrRepositoryResponseData;
-import com.veraxsystems.vxipmi.coding.commands.sdr.record.CompactSensorRecord;
-import com.veraxsystems.vxipmi.coding.commands.sdr.record.FruDeviceLocatorRecord;
-import com.veraxsystems.vxipmi.coding.commands.sdr.record.ReadingType;
-import com.veraxsystems.vxipmi.coding.commands.sdr.record.FullSensorRecord;
-import com.veraxsystems.vxipmi.coding.commands.sdr.record.RateUnit;
-import com.veraxsystems.vxipmi.coding.commands.sdr.record.SensorRecord;
-import com.veraxsystems.vxipmi.coding.commands.sel.GetSelEntry;
-import com.veraxsystems.vxipmi.coding.commands.sel.GetSelEntryResponseData;
-import com.veraxsystems.vxipmi.coding.commands.sel.GetSelInfo;
-import com.veraxsystems.vxipmi.coding.commands.sel.GetSelInfoResponseData;
-import com.veraxsystems.vxipmi.coding.commands.sel.ReserveSel;
-import com.veraxsystems.vxipmi.coding.commands.sel.ReserveSelResponseData;
-import com.veraxsystems.vxipmi.coding.commands.sel.SelRecord;
-import com.veraxsystems.vxipmi.coding.commands.session.CloseSession;
-import com.veraxsystems.vxipmi.coding.commands.session.GetChannelAuthenticationCapabilities;
-import com.veraxsystems.vxipmi.coding.commands.session.GetChannelAuthenticationCapabilitiesResponseData;
-import com.veraxsystems.vxipmi.coding.commands.session.GetChannelCipherSuites;
-import com.veraxsystems.vxipmi.coding.commands.session.GetChannelCipherSuitesResponseData;
-import com.veraxsystems.vxipmi.coding.commands.session.OpenSession;
-import com.veraxsystems.vxipmi.coding.commands.session.OpenSessionResponseData;
-import com.veraxsystems.vxipmi.coding.commands.session.Rakp1;
-import com.veraxsystems.vxipmi.coding.commands.session.Rakp1ResponseData;
-import com.veraxsystems.vxipmi.coding.commands.session.Rakp3;
-import com.veraxsystems.vxipmi.coding.commands.session.Rakp3ResponseData;
-import com.veraxsystems.vxipmi.coding.payload.lan.IPMIException;
-import com.veraxsystems.vxipmi.coding.protocol.AuthenticationType;
-import com.veraxsystems.vxipmi.coding.protocol.decoder.PlainCommandv20Decoder;
-import com.veraxsystems.vxipmi.coding.protocol.decoder.Protocolv15Decoder;
-import com.veraxsystems.vxipmi.coding.protocol.decoder.Protocolv20Decoder;
-import com.veraxsystems.vxipmi.coding.protocol.encoder.Protocolv15Encoder;
-import com.veraxsystems.vxipmi.coding.protocol.encoder.Protocolv20Encoder;
-import com.veraxsystems.vxipmi.coding.security.CipherSuite;
-import com.veraxsystems.vxipmi.coding.security.SecurityConstants;
-import com.veraxsystems.vxipmi.common.TypeConverter;
-
-import javax.crypto.NoSuchPaddingException;
-
-import org.apache.log4j.Logger;
 
 /**
  * Test driver for Encoder/Decoder

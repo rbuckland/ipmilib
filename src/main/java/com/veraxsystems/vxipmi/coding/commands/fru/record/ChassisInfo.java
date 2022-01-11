@@ -11,9 +11,9 @@
  */
 package com.veraxsystems.vxipmi.coding.commands.fru.record;
 
-import java.util.ArrayList;
-
 import com.veraxsystems.vxipmi.common.TypeConverter;
+
+import java.util.ArrayList;
 
 /**
  * FRU record containing Chassis info.<br>
